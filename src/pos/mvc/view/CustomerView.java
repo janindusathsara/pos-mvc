@@ -20,7 +20,7 @@ import pos.mvc.model.CustomerModel;
 public class CustomerView extends javax.swing.JFrame {
 
     private CustomerController customerController;
-    
+
     /**
      * Creates new form CustomerView
      */
@@ -283,6 +283,11 @@ public class CustomerView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        customerTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                customerTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(customerTable);
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
@@ -347,7 +352,7 @@ public class CustomerView extends javax.swing.JFrame {
     }//GEN-LAST:event_custDobTextActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
+        updateCustomer();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -357,6 +362,10 @@ public class CustomerView extends javax.swing.JFrame {
     private void custSalaryTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_custSalaryTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_custSalaryTextActionPerformed
+
+    private void customerTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerTableMouseClicked
+        searchCustomer();
+    }//GEN-LAST:event_customerTableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -393,16 +402,16 @@ public class CustomerView extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void saveCustomer() {
-        CustomerModel customer = new CustomerModel(custIdText.getText(), 
-                custTittleText.getText(), 
-                custNameText.getText(), 
-                custDobText.getText(), 
-                Double.parseDouble(custSalaryText.getText()), 
-                custAddressText.getText(), 
-                custCityText.getText(), 
-                custProvinceText.getText(), 
+        CustomerModel customer = new CustomerModel(custIdText.getText(),
+                custTittleText.getText(),
+                custNameText.getText(),
+                custDobText.getText(),
+                Double.parseDouble(custSalaryText.getText()),
+                custAddressText.getText(),
+                custCityText.getText(),
+                custProvinceText.getText(),
                 custZipText.getText());
-        
+
         try {
             String resp = customerController.saveCustomer(customer);
             JOptionPane.showMessageDialog(this, resp);
@@ -413,8 +422,8 @@ public class CustomerView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
-    private void clear(){
+
+    private void clear() {
         custIdText.setText("");
         custTittleText.setText("");
         custNameText.setText("");
@@ -425,22 +434,22 @@ public class CustomerView extends javax.swing.JFrame {
         custProvinceText.setText("");
         custZipText.setText("");
     }
-    
-    private void loadAllCustomers(){
+
+    private void loadAllCustomers() {
         try {
-            String [] columns = {"ID", "Name", "Address", "Salary", "Postal Code"};
-            DefaultTableModel dtm = new DefaultTableModel(columns,0){
+            String[] columns = {"ID", "Name", "Address", "Salary", "Postal Code"};
+            DefaultTableModel dtm = new DefaultTableModel(columns, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
                     return false;
                 }
             };
             customerTable.setModel(dtm);
-            
+
             ArrayList<CustomerModel> customers = customerController.getAllCustomers();
-            
+
             for (CustomerModel customer : customers) {
-                Object[] rowData = {customer.getCustId(),customer.getTittle() + " " + customer.getName(), customer.getAddress() + ", " + customer.getCity(), customer.getSalary(), customer.getZip()};
+                Object[] rowData = {customer.getCustId(), customer.getTittle() + " " + customer.getName(), customer.getAddress() + ", " + customer.getCity(), customer.getSalary(), customer.getZip()};
                 dtm.addRow(rowData);
             }
         } catch (SQLException ex) {
@@ -448,5 +457,52 @@ public class CustomerView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
+
+    private void searchCustomer() {
+        try {
+            String custId = customerTable.getValueAt(customerTable.getSelectedRow(), 0).toString();
+            CustomerModel customerModel = customerController.getCustomer(custId);
+
+            if (customerModel != null) {
+                custIdText.setText(customerModel.getCustId());
+                custTittleText.setText(customerModel.getTittle());
+                custNameText.setText(customerModel.getName());
+                custDobText.setText(customerModel.getDob());
+                custSalaryText.setText(Double.toString(customerModel.getSalary()));
+                custAddressText.setText(customerModel.getAddress());
+                custCityText.setText(customerModel.getCity());
+                custProvinceText.setText(customerModel.getProvince());
+                custZipText.setText(customerModel.getZip());
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer Not Found");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+
+    private void updateCustomer() {
+        try {
+            CustomerModel customer = new CustomerModel(
+                    custIdText.getText(),
+                    custTittleText.getText(),
+                    custNameText.getText(),
+                    custDobText.getText(),
+                    Double.parseDouble(custSalaryText.getText()),
+                    custAddressText.getText(),
+                    custCityText.getText(),
+                    custProvinceText.getText(),
+                    custZipText.getText());
+            
+            String resp = customerController.updateCustomer(customer);
+            JOptionPane.showMessageDialog(this, resp);
+            clear();
+            loadAllCustomers();
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
