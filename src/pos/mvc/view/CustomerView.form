@@ -103,7 +103,11 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="custDobText" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="custDobText" min="-2" pref="99" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="custSalaryLabel" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                                   <Component id="custZipText" alignment="0" pref="132" max="32767" attributes="0"/>
@@ -150,7 +154,13 @@
                                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                                       <Component id="custNameLabel" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="custNameText" max="32767" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" attributes="0">
+                                                              <Component id="custSalaryText" min="-2" pref="99" max="-2" attributes="0"/>
+                                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                                          </Group>
+                                                          <Component id="custNameText" max="32767" attributes="0"/>
+                                                      </Group>
                                                   </Group>
                                               </Group>
                                           </Group>
@@ -182,6 +192,8 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="custDobLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="custDobText" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
+                          <Component id="custSalaryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="custSalaryText" alignment="3" min="-2" pref="16" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -307,6 +319,19 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Save Customer"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="custSalaryLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Salary"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="custSalaryText">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="custSalaryTextActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
