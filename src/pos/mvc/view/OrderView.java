@@ -456,5 +456,6 @@ public class OrderView extends javax.swing.JFrame {
         loadTable();
         customerIdText.setText("");
         custDataLabel.setText("");
+        orderIdText.setText("");
     }
 }
