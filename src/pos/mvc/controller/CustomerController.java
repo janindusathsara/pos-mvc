@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import pos.mvc.db.DBConnection;
 
@@ -39,7 +41,6 @@ public class CustomerController {
         } else {
             return "Fail";
         }
-
     }
 
     public ArrayList<CustomerModel> getAllCustomers() throws SQLException {
@@ -106,7 +107,7 @@ public class CustomerController {
         preparedStatement.setString(6, customerModel.getCity());
         preparedStatement.setString(7, customerModel.getProvince());
         preparedStatement.setString(8, customerModel.getZip());
-        
+
         if (preparedStatement.executeUpdate() > 0) {
             return "Success";
         } else {
@@ -117,14 +118,39 @@ public class CustomerController {
     public String deleteCustomer(String custId) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
 
-        String sql ="DELETE FROM Customer WHERE CustId=?";
+        String sql = "DELETE FROM Customer WHERE CustId=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, custId);
-        
+
         if (preparedStatement.executeUpdate() > 0) {
             return "Success";
         } else {
             return "Fail";
+        }
+    }
+
+    public boolean checkSalary(String salary) {
+        try {
+            int number = Integer.parseInt(salary);
+            return true;
+        } catch (NumberFormatException e1) {
+            try {
+                double number = Double.parseDouble(salary);
+                return true;
+            } catch (NumberFormatException e2) {
+                return false;
+            }
+        }
+    }
+
+    public boolean checkDOB(String dob) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            sdf.parse(dob);
+            return true;
+        } catch (ParseException e) {
+            return false;
         }
     }
 

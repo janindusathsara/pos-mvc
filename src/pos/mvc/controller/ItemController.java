@@ -97,14 +97,32 @@ public class ItemController {
     public String deleteItem(String itemCode) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         String sql = "DELETE FROM item WHERE ItemCode = ?";
-        
+
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, itemCode);
-        
+
         if (preparedStatement.executeUpdate() > 0) {
             return "Success";
         } else {
             return "Fail";
+        }
+    }
+
+    public boolean checkUnitPrice(String text) {
+        try {
+            int number = Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean checkQOH(String text) {
+        try {
+            int number = Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

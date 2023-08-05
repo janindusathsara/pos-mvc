@@ -87,4 +87,27 @@ public class OrderController {
 
     }
 
+    public boolean checkDiscount(String discount) {
+        try {
+            int number = Integer.parseInt(discount);
+            return true;
+        } catch (NumberFormatException e1) {
+            try {
+                double number = Double.parseDouble(discount);
+                return true;
+            } catch (NumberFormatException e2) {
+                return false;
+            }
+        }
+    }
+
+    public boolean checkQTY(String qty) {
+        try {
+            int number = Integer.parseInt(qty);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 }

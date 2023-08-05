@@ -5,6 +5,7 @@
 package pos.mvc.view;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -411,25 +412,47 @@ public class CustomerView extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void saveCustomer() {
-        CustomerModel customer = new CustomerModel(custIdText.getText(),
-                custTittleText.getText(),
-                custNameText.getText(),
-                custDobText.getText(),
-                Double.parseDouble(custSalaryText.getText()),
-                custAddressText.getText(),
-                custCityText.getText(),
-                custProvinceText.getText(),
-                custZipText.getText());
 
         try {
-            String resp = customerController.saveCustomer(customer);
-            JOptionPane.showMessageDialog(this, resp);
-            clear();
-            loadAllCustomers();
-        } catch (SQLException ex) {
+            if (customerController.checkDOB(custDobText.getText())) {
+
+                if (customerController.checkSalary(custSalaryText.getText())) {
+
+                    CustomerModel customer = new CustomerModel(custIdText.getText(),
+                            custTittleText.getText(),
+                            custNameText.getText(),
+                            custDobText.getText(),
+                            Double.parseDouble(custSalaryText.getText()),
+                            custAddressText.getText(),
+                            custCityText.getText(),
+                            custProvinceText.getText(),
+                            custZipText.getText());
+
+                    try {
+                        String resp = customerController.saveCustomer(customer);
+                        JOptionPane.showMessageDialog(this, resp);
+                        clear();
+                        loadAllCustomers();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please enter 'Salary' to integer value");
+                    custSalaryText.setText("");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter 'DOB' in YYYY-MM-DD pattern");
+                custDobText.setText("");
+            }
+
+        } catch (ParseException ex) {
             Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
+
     }
 
     private void clear() {
@@ -493,23 +516,43 @@ public class CustomerView extends javax.swing.JFrame {
     }
 
     private void updateCustomer() {
-        try {
-            CustomerModel customer = new CustomerModel(
-                    custIdText.getText(),
-                    custTittleText.getText(),
-                    custNameText.getText(),
-                    custDobText.getText(),
-                    Double.parseDouble(custSalaryText.getText()),
-                    custAddressText.getText(),
-                    custCityText.getText(),
-                    custProvinceText.getText(),
-                    custZipText.getText());
 
-            String resp = customerController.updateCustomer(customer);
-            JOptionPane.showMessageDialog(this, resp);
-            clear();
-            loadAllCustomers();
-        } catch (SQLException ex) {
+        try {
+            if (customerController.checkDOB(custDobText.getText())) {
+                
+                if (customerController.checkSalary(custSalaryText.getText())) {
+                    
+                    try {
+                        CustomerModel customer = new CustomerModel(
+                                custIdText.getText(),
+                                custTittleText.getText(),
+                                custNameText.getText(),
+                                custDobText.getText(),
+                                Double.parseDouble(custSalaryText.getText()),
+                                custAddressText.getText(),
+                                custCityText.getText(),
+                                custProvinceText.getText(),
+                                custZipText.getText());
+                        
+                        String resp = customerController.updateCustomer(customer);
+                        JOptionPane.showMessageDialog(this, resp);
+                        clear();
+                        loadAllCustomers();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+                    
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please enter 'Salary' to integer value");
+                    custSalaryText.setText("");
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter 'DOB' in YYYY-MM-DD pattern");
+                custDobText.setText("");
+            }
+        } catch (ParseException ex) {
             Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }

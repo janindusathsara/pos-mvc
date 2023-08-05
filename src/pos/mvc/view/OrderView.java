@@ -25,11 +25,11 @@ import pos.mvc.model.OrderModel;
  * @author DELL i5
  */
 public class OrderView extends javax.swing.JFrame {
-    
+
     private CustomerController customerController;
     private ItemController itemController;
     private OrderController orderController;
-    
+
     ArrayList<OrderDetailModel> orderDetailModels = new ArrayList<>();
 
     /**
@@ -322,7 +322,7 @@ public class OrderView extends javax.swing.JFrame {
     }//GEN-LAST:event_itemIdTextActionPerformed
 
     private void searchItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchItemButtonActionPerformed
-       searchItem();
+        searchItem();
     }//GEN-LAST:event_searchItemButtonActionPerformed
 
     private void qtyTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qtyTextActionPerformed
@@ -376,7 +376,7 @@ public class OrderView extends javax.swing.JFrame {
         try {
             String custId = customerIdText.getText();
             CustomerModel cust = customerController.getCustomer(custId);
-            
+
             if (cust != null) {
                 custDataLabel.setText(cust.getName() + ", " + cust.getAddress());
             } else {
@@ -394,23 +394,23 @@ public class OrderView extends javax.swing.JFrame {
         try {
             String itemId = itemIdText.getText();
             ItemModel itm = itemController.getItem(itemId);
-            
-        if (itm != null) {
-                itemDataLabel.setText(itm.getDescription()+ ", " + itm.getUnitPrice()+ ", " + itm.getQoh());
+
+            if (itm != null) {
+                itemDataLabel.setText(itm.getDescription() + ", " + itm.getUnitPrice() + ", " + itm.getQoh());
             } else {
                 JOptionPane.showMessageDialog(this, "Item Not Found");
                 itemDataLabel.setText("");
                 itemIdText.setText("");
-            }    
+            }
         } catch (SQLException ex) {
             Logger.getLogger(OrderView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
 
-    private void loadTable(){
+    private void loadTable() {
         String[] collumns = {"Item Code", "Qty", "Discount"};
-        DefaultTableModel dtm = new DefaultTableModel(collumns, 0){
+        DefaultTableModel dtm = new DefaultTableModel(collumns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -418,17 +418,36 @@ public class OrderView extends javax.swing.JFrame {
         };
         itemTable.setModel(dtm);
     }
-    
+
     private void addToTable() {
-        OrderDetailModel od = new OrderDetailModel("", itemIdText.getText(), Integer.parseInt(qtyText.getText()), Double.parseDouble(discountText.getText()));
-        orderDetailModels.add(od);
-        
-        Object[] rowData = {od.getItemCode(),od.getQty(),od.getDiscount()};
-        
-        DefaultTableModel dtm = (DefaultTableModel) itemTable.getModel();
-        dtm.addRow(rowData);
-        
-        cleanItemData();
+
+        if (orderController.checkQTY(qtyText.getText())) {
+
+            if (orderController.checkDiscount(discountText.getText())) {
+
+                OrderDetailModel od = new OrderDetailModel(
+                        "",
+                        itemIdText.getText(),
+                        Integer.parseInt(qtyText.getText()),
+                        Double.parseDouble(discountText.getText()));
+                orderDetailModels.add(od);
+
+                Object[] rowData = {od.getItemCode(), od.getQty(), od.getDiscount()};
+
+                DefaultTableModel dtm = (DefaultTableModel) itemTable.getModel();
+                dtm.addRow(rowData);
+
+                cleanItemData();
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter 'Discount' to Integer or Double value");
+                discountText.setText("");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter 'QTY' to Integer value");
+            qtyText.setText("");
+        }
     }
 
     private void cleanItemData() {
@@ -442,8 +461,8 @@ public class OrderView extends javax.swing.JFrame {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             OrderModel orderModel = new OrderModel(orderIdText.getText(), sdf.format(new Date()), customerIdText.getText());
-            
-            String result = orderController.placeOrder(orderModel,orderDetailModels);
+
+            String result = orderController.placeOrder(orderModel, orderDetailModels);
             JOptionPane.showMessageDialog(this, result);
         } catch (SQLException ex) {
             Logger.getLogger(OrderView.class.getName()).log(Level.SEVERE, null, ex);

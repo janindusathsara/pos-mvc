@@ -339,22 +339,36 @@ public class ItemView extends javax.swing.JFrame {
     }
 
     private void saveItem() {
-        try {
-            ItemModel itemModel = new ItemModel(
-                    itemCodeText.getText(),
-                    descriptionText.getText(),
-                    packSizeText.getText(),
-                    Double.parseDouble(unitPriceText.getText()),
-                    Integer.parseInt(qohText.getText()));
 
-            String resp = itemController.saveItem(itemModel);
-            JOptionPane.showMessageDialog(this, resp);
-            clear();
-            loadAllItems();
-        } catch (SQLException ex) {
-            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+        if (itemController.checkUnitPrice(unitPriceText.getText())) {
+
+            if (itemController.checkQOH(qohText.getText())) {
+                try {
+                    ItemModel itemModel = new ItemModel(
+                            itemCodeText.getText(),
+                            descriptionText.getText(),
+                            packSizeText.getText(),
+                            Double.parseDouble(unitPriceText.getText()),
+                            Integer.parseInt(qohText.getText()));
+
+                    String resp = itemController.saveItem(itemModel);
+                    JOptionPane.showMessageDialog(this, resp);
+                    clear();
+                    loadAllItems();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter 'Qty On Hand' to integer value");
+                qohText.setText("");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter 'Unit Price' to integer value");
+            unitPriceText.setText("");
         }
+
     }
 
     private void clear() {
@@ -386,21 +400,36 @@ public class ItemView extends javax.swing.JFrame {
     }
 
     private void updateItem() {
-        try {
-            ItemModel itemModel = new ItemModel(
-                    itemCodeText.getText(),
-                    descriptionText.getText(),
-                    packSizeText.getText(),
-                    Double.parseDouble(unitPriceText.getText()),
-                    Integer.parseInt(qohText.getText()));
 
-            String resp = itemController.updateItem(itemModel);
-            JOptionPane.showMessageDialog(this, resp);
-            clear();
-            loadAllItems();
-        } catch (SQLException ex) {
-            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+        if (itemController.checkUnitPrice(unitPriceText.getText())) {
+
+            if (itemController.checkQOH(qohText.getText())) {
+
+                try {
+                    ItemModel itemModel = new ItemModel(
+                            itemCodeText.getText(),
+                            descriptionText.getText(),
+                            packSizeText.getText(),
+                            Double.parseDouble(unitPriceText.getText()),
+                            Integer.parseInt(qohText.getText()));
+
+                    String resp = itemController.updateItem(itemModel);
+                    JOptionPane.showMessageDialog(this, resp);
+                    clear();
+                    loadAllItems();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter 'Qty On Hand' to integer value");
+                qohText.setText("");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter 'Unit Price' to integer value");
+            unitPriceText.setText("");
         }
     }
 
